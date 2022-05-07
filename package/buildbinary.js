@@ -58,6 +58,22 @@ try {
 
 const buildInfo = nodbUtil.BINARY_FILE + ' ' + nodeVersion + ' ' + njsGitSha + ' ' + odpiGitSha + ' ' + buildDate.toUTCString();
 
+
+// Copy a directory
+function copyDir(srcDir, destDir) {
+  try {
+    let f = fs.readdirSync(srcDir);
+    for (let i = 0; i < f.length; i++) {
+      fs.copyFileSync(srcDir + '/' + f[i], destDir + '/' + f[i]);
+      let mode = f[i].match(/\.txt$/) ? 0o644 : 0o755;
+      fs.chmodSync(destDir + '/' + f[i], mode);
+    }
+  } catch (err) {
+    console.error(err.message);
+  }
+}
+
+
 // Build a binary and move it to the Staging directory
 function buildBinary() {
   console.log('Building binary ' + nodbUtil.BINARY_FILE + ' using Node.js ' + nodeVersion);
@@ -77,10 +93,13 @@ function buildBinary() {
     execSync('node-gyp rebuild');
     fs.renameSync(buildBinaryFile, binaryStagingFile);
     fs.appendFileSync(binaryStagingInfoFile, buildInfo + "\n");
+    copyDir(nodbUtil.STAGING_DIR, nodbUtil.RELEASE_DIR);
   } catch (err) {
     console.error(err.message);
   }
 }
+
+
 
 //
 // Main
