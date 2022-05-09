@@ -1,6 +1,6 @@
 {
   "name": "bks-oracledb",
-  "version": "5.3.2",
+  "version": "5.3.3",
   "description": "A Node.js module for Oracle Database access",
   "license": "Apache-2.0",
   "homepage": "http://oracle.github.io/node-oracledb/",
